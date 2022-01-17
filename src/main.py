@@ -25,31 +25,31 @@ if __name__ == '__main__':
                         help='Choosing the mode of the agent, False for learning or True for playing.')
     parser.add_argument('-gamma', type=float, default=0.99,
                         help='Discount factor for the update rule')
-    parser.add_argument('-alpha', type=float, default=3e-4,
+    parser.add_argument('-alpha', type=float, default=1e-3,
                         help='The Actor network learning rate')
-    parser.add_argument('-beta', type=float, default=3e-4,
+    parser.add_argument('-beta', type=float, default=1e-3,
                         help='The Critic and Value networks learning rate')
-    parser.add_argument('-fc1_dim', type=int, default=256,
+    parser.add_argument('-fc1_dim', type=int, default=400,
                         help='The dimension of the first Linear layer across all networks')
-    parser.add_argument('-fc2_dim', type=int, default=256,
+    parser.add_argument('-fc2_dim', type=int, default=300,
                         help='The dimension of the second Linear layer across all networks')
     parser.add_argument('-memory_size', type=int, default=1000000,
                         help='The Replay Buffer memory size')
-    parser.add_argument('-batch_size', type=int, default=256,
+    parser.add_argument('-batch_size', type=int, default=100,
                         help='The batch size')
     parser.add_argument('-tau', type=float, default=0.005,
                         help='The parameters update constant -- 1 for hard update, 0 for no update')
     parser.add_argument('-update_period', type=int, default=2,
                         help='The period for updating the networks weights')
-    parser.add_argument('-reward_scale', type=float, default=2.,
-                        help='The scale for the rewards as written in the paper (exploration / exploitation parameter)')
+    parser.add_argument('-noise_std', type=float, default=0.1,
+                        help='The action noise standard deviation')
     parser.add_argument('-warmup', type=int, default=100,
                         help='Number of transitions passes before start learning')
-    parser.add_argument('-reparam_noise_lim', type=float, default=1e-6,
-                        help='The lower limit of the reparametrization noise (the upper limit is hardcoded to 1.)')
-    parser.add_argument('-n_games', type=int, default=500,
+    parser.add_argument('-noise_clip', type=float, default=0.5,
+                        help='Limiting value for noise clipping')
+    parser.add_argument('-n_games', type=int, default=200,
                         help='Number of games / episodes')
-    parser.add_argument('-env_name', type=str, default='InvertedDoublePendulumBulletEnv-v0',
+    parser.add_argument('-env_name', type=str, default='InvertedPendulumBulletEnv-v0',
                         help='The environment name, PyBullet or Gym')
     parser.add_argument('-load_checkpoint', type=bool, default=False,
                         help='Load a model checkpoint')
@@ -70,10 +70,10 @@ if __name__ == '__main__':
 
     agent = Agent(gamma=args.gamma, alpha=args.alpha, beta=args.beta, state_dims=env.observation_space.shape,
                   action_dims=env.action_space.shape, max_action=env.action_space.high[0],
-                  fc1_dim=args.fc1_dim, fc2_dim=args.fc2_dim, memory_size=args.memory_size,
-                  batch_size=args.batch_size, tau=args.tau, update_period=args.update_period,
-                  reward_scale=args.reward_scale, warmup=args.warmup, reparam_noise_lim=args.reparam_noise_lim,
-                  name='SAC_'+args.env_name, ckpt_dir=dir_path)
+                  min_action=env.action_space.low[0], fc1_dim=args.fc1_dim, fc2_dim=args.fc2_dim,
+                  memory_size=args.memory_size, batch_size=args.batch_size, tau=args.tau,
+                  update_period=args.update_period, noise_std=args.noise_std, noise_clip=args.noise_clip,
+                  warmup=args.warmup, name='SAC_'+args.env_name, ckpt_dir=dir_path)
 
     scores, avg_scores = [], []
     best_score = -np.inf
@@ -94,9 +94,9 @@ if __name__ == '__main__':
 
         while not done:
             if args.play:
-                action = agent.choose_action(observation, deterministic=True, reparameterize=False)
+                action = agent.choose_action(observation, add_noise=False)
             else:
-                action = agent.choose_action(observation, deterministic=False, reparameterize=False)
+                action = agent.choose_action(observation, add_noise=True)
             observation_, reward, done, info = env.step(action)
             score += reward
             agent.store_transition(observation, action, reward, observation_, done)

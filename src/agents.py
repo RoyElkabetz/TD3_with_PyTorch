@@ -8,7 +8,7 @@ from networks import Actor, Critic
 
 
 class Agent:
-    def __init__(self, gamma, alpha, beta, state_dims, action_dims, max_action, min_action, fc1_dims, fc2_dims,
+    def __init__(self, gamma, alpha, beta, state_dims, action_dims, max_action, min_action, fc1_dim, fc2_dim,
                  memory_size, batch_size, tau, update_period, noise_std, noise_clip, warmup, name, ckpt_dir='tmp'):
         self.gamma = gamma
         self.alpha = alpha
@@ -17,8 +17,8 @@ class Agent:
         self.action_dims = action_dims
         self.max_action = max_action
         self.min_action = min_action
-        self.fc1_dims = fc1_dims
-        self.fc2_dims = fc2_dims
+        self.fc1_dim = fc1_dim
+        self.fc2_dim = fc2_dim
         self.memory_size = memory_size
         self.batch_size = batch_size
         self.update_period = update_period
@@ -33,8 +33,8 @@ class Agent:
                      f'gamma_{gamma}__' \
                      f'alpha_{alpha}__' \
                      f'beta_{beta}__' \
-                     f'fc1_{fc1_dims}__' \
-                     f'fc2_{fc2_dims}__' \
+                     f'fc1_{fc1_dim}__' \
+                     f'fc2_{fc2_dim}__' \
                      f'bs_{batch_size}__' \
                      f'buffer_{memory_size}__' \
                      f'update_period_{update_period}__' \
@@ -51,19 +51,19 @@ class Agent:
         self.replay_buffer = ReplayBuffer(self.memory_size, self.state_dims, self.action_dims)
 
         # Initialize Critics
-        self.critic_1 = Critic(self.beta, self.state_dims, self.action_dims, self.fc1_dims, self.fc2_dims,
+        self.critic_1 = Critic(self.beta, self.state_dims, self.action_dims, self.fc1_dim, self.fc2_dim,
                                name='Critic_1', ckpt_dir=self.ckpt_dir)
-        self.critic_2 = Critic(self.beta, self.state_dims, self.action_dims, self.fc1_dims, self.fc2_dims,
+        self.critic_2 = Critic(self.beta, self.state_dims, self.action_dims, self.fc1_dim, self.fc2_dim,
                                name='Critic_2', ckpt_dir=self.ckpt_dir)
-        self.target_critic_1 = Critic(self.beta, self.state_dims, self.action_dims, self.fc1_dims,
-                                      self.fc2_dims, name='Target_Critic_1', ckpt_dir=self.ckpt_dir)
-        self.target_critic_2 = Critic(self.beta, self.state_dims, self.action_dims, self.fc1_dims,
-                                      self.fc2_dims, name='Target_Critic_2', ckpt_dir=self.ckpt_dir)
+        self.target_critic_1 = Critic(self.beta, self.state_dims, self.action_dims, self.fc1_dim,
+                                      self.fc2_dim, name='Target_Critic_1', ckpt_dir=self.ckpt_dir)
+        self.target_critic_2 = Critic(self.beta, self.state_dims, self.action_dims, self.fc1_dim,
+                                      self.fc2_dim, name='Target_Critic_2', ckpt_dir=self.ckpt_dir)
 
         # Initialize Actor
-        self.actor = Actor(self.alpha, self.state_dims, self.action_dims, self.fc1_dims, self.fc2_dims,
+        self.actor = Actor(self.alpha, self.state_dims, self.action_dims, self.fc1_dim, self.fc2_dim,
                            name='Actor', ckpt_dir=self.ckpt_dir)
-        self.target_actor = Actor(self.alpha, self.state_dims, self.action_dims, self.fc1_dims, self.fc2_dims,
+        self.target_actor = Actor(self.alpha, self.state_dims, self.action_dims, self.fc1_dim, self.fc2_dim,
                                   name='Target_Actor', ckpt_dir=self.ckpt_dir)
 
         # Update network parameters
@@ -133,7 +133,7 @@ class Agent:
         self.target_critic1.load_state_dict(critic1_state_dict)
         self.target_critic2.load_state_dict(critic2_state_dict)
 
-    def save_models(self):
+    def save_model(self):
         self.actor.save_checkpoint()
         self.target_actor.save_checkpoint()
         self.critic_1.save_checkpoint()
