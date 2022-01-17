@@ -18,8 +18,8 @@ np.random.seed(seed)
 if __name__ == '__main__':
     # ========================================= SET ARGUMENTS =========================================
     parser = argparse.ArgumentParser(description='This code is implementing the Deep Reinforcement Learning'
-                                                 ' algorithm Soft Actor Critic (SAC) for low dimensional environment'
-                                                 ' states as inputs.')
+                                                 ' algorithm Twin Delayed Deep Deterministic Policy Gradient (TD3) '
+                                                 'for low dimensional environment states as inputs.')
     parser.add_argument('-play', type=bool, default=False,
                         choices=[True, False],
                         help='Choosing the mode of the agent, False for learning or True for playing.')
@@ -73,7 +73,7 @@ if __name__ == '__main__':
                   min_action=env.action_space.low[0], fc1_dim=args.fc1_dim, fc2_dim=args.fc2_dim,
                   memory_size=args.memory_size, batch_size=args.batch_size, tau=args.tau,
                   update_period=args.update_period, noise_std=args.noise_std, noise_clip=args.noise_clip,
-                  warmup=args.warmup, name='SAC_'+args.env_name, ckpt_dir=dir_path)
+                  warmup=args.warmup, name='TD3_'+args.env_name, ckpt_dir=dir_path)
 
     scores, avg_scores = [], []
     best_score = -np.inf
