@@ -130,8 +130,8 @@ class Agent:
 
         # load the new parameters as state dicts into the networks
         self.target_actor.load_state_dict(actor_state_dict)
-        self.target_critic1.load_state_dict(critic1_state_dict)
-        self.target_critic2.load_state_dict(critic2_state_dict)
+        self.target_critic_1.load_state_dict(critic1_state_dict)
+        self.target_critic_2.load_state_dict(critic2_state_dict)
 
     def save_model(self):
         self.actor.save_checkpoint()
