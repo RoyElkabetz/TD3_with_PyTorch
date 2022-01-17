@@ -3,10 +3,16 @@ import gym
 import argparse
 import numpy as np
 import pybullet_envs
+import torch as T
 from gym import wrappers
 
 from utils import plot_learning_curve
 from agents import Agent
+
+# Seed everything
+seed = 216
+T.manual_seed(seed)
+np.random.seed(seed)
 
 
 if __name__ == '__main__':
