@@ -47,7 +47,7 @@ You can see below a few learning curves along with gifs of TD3 agents (trained w
 
 | #   | file            | Subject                                         | Colab             | Nbviewer               |
 |:----:|:--------------:|:------------------------------------------------:|:-----------------:|:---------------------:|
-| 1   | `TD3_notebook.ipynb` | Notebook to run on Colab with GPU   | [![Open In Collab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1nf63qekQpuY6BiJBzMI9XwovpGbt_8LL#scrollTo=MkIwmYFSg8nB)        | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/RoyElkabetz/SAC_with_PyTorch/blob/main/src/SAC_notebook.ipynb)|
+| 1   | `TD3_notebook.ipynb` | Notebook to run on Colab with a GPU   | [![Open In Collab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1nf63qekQpuY6BiJBzMI9XwovpGbt_8LL#scrollTo=MkIwmYFSg8nB)        | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/RoyElkabetz/SAC_with_PyTorch/blob/main/src/SAC_notebook.ipynb)|
 
 
 ## Command Line API
