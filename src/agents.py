@@ -150,7 +150,9 @@ class Agent:
         self.target_critic_2.load_checkpoint(gpu_to_cpu=gpu_to_cpu)
 
     def learn(self):
+
         # learns only after warmup iteration and when there is at least a single batch in buffer to load
+        self.learn_iter += 1
         if self.learn_iter < self.warmup or self.learn_iter < self.batch_size:
             return
 
@@ -158,7 +160,7 @@ class Agent:
         noise = np.random.normal(0, self.noise_std, (self.batch_size, *self.action_dims))
         noise = T.clamp(T.tensor(noise, dtype=T.float), -self.noise_clip, self.noise_clip).to(self.actor.device)
         actions_ = self.target_actor.forward(states_).to(self.actor.device)
-        actions_ = T.clamp(T.add(actions_, noise), self.min_action[0], self.max_action[0]).to(self.actor.device)
+        actions_ = T.clamp(T.add(actions_, noise), self.min_action, self.max_action).to(self.actor.device)
 
         q1 = self.critic_1.forward(states, actions).to(self.actor.device)
         q2 = self.critic_2.forward(states, actions).to(self.actor.device)
@@ -181,7 +183,6 @@ class Agent:
         critic_loss.backward()
         self.critic_1.optimizer.step()
         self.critic_2.optimizer.step()
-        self.learn_iter += 1
 
         if self.learn_iter % self.update_period != 0:
             return
