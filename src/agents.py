@@ -157,11 +157,14 @@ class Agent:
             return
 
         states, actions, rewards, states_, done = self.load_batch()
+
+        # compute the noisy next actions
         noise = np.random.normal(0, self.noise_std, (self.batch_size, *self.action_dims))
         noise = T.clamp(T.tensor(noise, dtype=T.float), -self.noise_clip, self.noise_clip).to(self.actor.device)
         actions_ = self.target_actor.forward(states_).to(self.actor.device)
         actions_ = T.clamp(T.add(actions_, noise), self.min_action, self.max_action).to(self.actor.device)
 
+        # compute the state action values
         q1 = self.critic_1.forward(states, actions).to(self.actor.device)
         q2 = self.critic_2.forward(states, actions).to(self.actor.device)
         q1_ = self.target_critic_1.forward(states_, actions_)
@@ -170,11 +173,11 @@ class Agent:
         q2_[done] = 0.0
         q1_ = q1_.view(-1)
         q2_ = q2_.view(-1)
-
         q_min = T.min(q1_, q2_)
         y = rewards + self.gamma * q_min
         y = y.view(self.batch_size, 1)
 
+        # optimize the critic networks
         self.critic_1.optimizer.zero_grad()
         self.critic_2.optimizer.zero_grad()
         q1_loss = F.mse_loss(y, q1)
@@ -187,57 +190,11 @@ class Agent:
         if self.learn_iter % self.update_period != 0:
             return
 
+        # optimize actor network
         self.actor.optimizer.zero_grad()
         actor_loss = -T.mean(self.critic_1.forward(states, self.actor.forward(states)))
         actor_loss.backward()
         self.actor.optimizer.step()
+
+        # update networks parameters
         self.update_parameters()
-
-        # states, actions, rewards, states_, done = self.load_batch()
-        #
-        # # compute the noisy next actions
-        # action_noise = np.random.normal(0, scale=self.noise_std, size=(self.batch_size, *self.action_dims))
-        # action_noise = T.clamp(T.tensor(action_noise, dtype=T.float), min=-self.noise_clip,
-        #                        max=self.noise_clip).to(self.critic_1.device)
-        # actions_ = self.actor(states_).to(self.critic_1.device)
-        # actions_ = T.clamp(T.add(actions_, action_noise), min=self.min_action[0], max=self.max_action[0])
-        #
-        # # compute the state action values
-        # q1 = self.critic_1.forward(states, actions)
-        # q2 = self.critic_2.forward(states, actions)
-        # q1_ = self.critic_1.forward(states_, actions_)
-        # q2_ = self.critic_2.forward(states_, actions_)
-        # q1_[done] = 0.0
-        # q2_[done] = 0.0
-        # q1_ = q1_.view(-1)
-        # q2_ = q2_.view(-1)
-        # q_min = T.min(q1_, q2_).to(self.critic_1.device)
-        # y = rewards + self.gamma * q_min
-        # y = y.view(self.batch_size, 1)
-        #
-        # # optimize the critic networks
-        # self.critic_1.optimizer.zero_grad()
-        # self.critic_2.optimizer.zero_grad()
-        # critic_1_loss = F.mse_loss(y, q1)
-        # critic_2_loss = F.mse_loss(y, q2)
-        # critic_loss = critic_1_loss + critic_2_loss
-        # critic_loss.backward()
-        # self.critic_1.optimizer.step()
-        # self.critic_2.optimizer.step()
-        #
-        # # check if time to actor learn and networks update
-        # self.learn_iter += 1
-        # if self.learn_iter % self.update_period != 0:
-        #     return
-        #
-        # # optimize actor network
-        # new_actions = self.actor.forward(states)
-        # self.actor.optimizer.zero_grad()
-        # actor_loss = -T.mean(self.critic_1.forward(states, new_actions))
-        # actor_loss.backward()
-        # self.actor.optimizer.step()
-        #
-        # # update networks parameters
-        # self.update_parameters()
-
-
