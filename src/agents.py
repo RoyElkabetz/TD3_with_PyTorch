@@ -84,7 +84,7 @@ class Agent:
         #     mu = self.actor.forward(state).to(self.actor.device)
         #     self.actor.train()
 
-        return mu.cpu().detach().numpy()
+        return mu.cpu().detach().numpy()[0]
 
     def store_transition(self, state, action, reward, state_, done):
         return self.replay_buffer.store_transition(state, action, reward, state_, done)
