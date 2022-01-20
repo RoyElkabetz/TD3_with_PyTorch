@@ -70,19 +70,19 @@ class Agent:
         self.update_parameters(tau=1)
 
     def choose_action(self, state, add_noise=True):
-        if self.learn_iter < self.warmup:
+        if add_noise:
             mu = T.tensor(np.random.rand(*self.action_dims) * (self.max_action - self.min_action) +
                           self.min_action, dtype=T.float).to(self.actor.device)
+            noise = np.random.normal(0, self.noise_std, self.action_dims)
+            noise = T.tensor(noise, dtype=T.float).to(self.actor.device)
+            mu = T.clamp(T.add(mu, noise), self.min_action, self.max_action)
+
         else:
             state = T.tensor(state, dtype=T.float).to(self.actor.device)
             self.actor.eval()
             mu = self.actor.forward(state).to(self.actor.device)
             self.actor.train()
 
-        if add_noise:
-            noise = np.random.normal(0, self.noise_std, self.action_dims)
-            noise = T.tensor(noise, dtype=T.float).to(self.actor.device)
-            mu = T.clamp(T.add(mu, noise), self.min_action, self.max_action)
         return mu.cpu().detach().numpy()
 
     def store_transition(self, state, action, reward, state_, done):
