@@ -70,18 +70,19 @@ class Agent:
         self.update_parameters(tau=1)
 
     def choose_action(self, state, add_noise=True):
+        state = T.tensor([state], dtype=T.float).to(self.actor.device)
+        mu = self.actor.forward(state).to(self.actor.device)
         if add_noise:
-            mu = T.tensor(np.random.rand(*self.action_dims) * (self.max_action - self.min_action) +
-                          self.min_action, dtype=T.float).to(self.actor.device)
+            # mu = T.tensor(np.random.rand(*self.action_dims) * (self.max_action - self.min_action) +
+            #               self.min_action, dtype=T.float).to(self.actor.device)
             noise = np.random.normal(0, self.noise_std, self.action_dims)
             noise = T.tensor(noise, dtype=T.float).to(self.actor.device)
             mu = T.clamp(T.add(mu, noise), self.min_action, self.max_action)
 
-        else:
-            state = T.tensor(state, dtype=T.float).to(self.actor.device)
-            self.actor.eval()
-            mu = self.actor.forward(state).to(self.actor.device)
-            self.actor.train()
+        # else:
+        #     self.actor.eval()
+        #     mu = self.actor.forward(state).to(self.actor.device)
+        #     self.actor.train()
 
         return mu.cpu().detach().numpy()
 
@@ -152,8 +153,8 @@ class Agent:
     def learn(self):
 
         # learns only after warmup iteration and when there is at least a single full batch in buffer to load
-        self.learn_iter += 1
         if self.learn_iter < self.warmup or self.learn_iter < self.batch_size:
+            self.learn_iter += 1
             return
 
         states, actions, rewards, states_, done = self.load_batch()
@@ -187,14 +188,15 @@ class Agent:
         self.critic_1.optimizer.step()
         self.critic_2.optimizer.step()
 
-        if self.learn_iter % self.update_period != 0:
-            return
+        if self.learn_iter % self.update_period == 0:
 
-        # optimize actor network
-        self.actor.optimizer.zero_grad()
-        actor_loss = -T.mean(self.critic_1.forward(states, self.actor.forward(states)))
-        actor_loss.backward()
-        self.actor.optimizer.step()
+            # optimize actor network
+            self.actor.optimizer.zero_grad()
+            actor_loss = -T.mean(self.critic_1.forward(states, self.actor.forward(states)))
+            actor_loss.backward()
+            self.actor.optimizer.step()
 
-        # update networks parameters
-        self.update_parameters()
+            # update networks parameters
+            self.update_parameters()
+        self.learn_iter += 1
+
