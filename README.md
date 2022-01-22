@@ -7,8 +7,9 @@ You can see below a few learning curves along with gifs of TD3 agents (trained w
 <img src="assets/SAC_InvertedDoublePendulumBulletEnv-v0__gamma_0.99__alpha_0.0003__beta_0.0003__fc1_256__fc2_256__bs_256__buffer_100000__update_period_2__tau_0.005__.png" width="" height="240"> ![](assets/TrainedInvertedDoublePendulumAgentGif.gif)
 
 
-<img src="assets/SAC_InvertedPendulumSwingupBulletEnv-v0__gamma_0.99__alpha_0.0003__beta_0.0003__fc1_256__fc2_256__bs_256__buffer_100000__update_period_2__tau_0.005__.png" width="" height="240"> ![](assets/TrainedInvertedPendulumSwingupAgentGif.gif)
+<img src="assets/TD3_InvertedPendulumSwingupBulletEnv-v0__gamma_0.99__alpha_0.001__beta_0.001__fc1_400__fc2_300__bs_100__buffer_1000000__update_period_2__tau_0.005__noise_std_0.2__warmup_1000__noise_clip_0.5__.png" width="" height="240"> ![](assets/TD3_InvertedPendulumSwingupBulletEnv-v0.gif)
 
+For some reasone I coudn't make the agent to get a perefect score in the Pendulum Swingup environment, probably because of the funny jiggling you see in the gif. 
 
 
 ## Requirements
