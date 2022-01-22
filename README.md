@@ -2,7 +2,7 @@
 
 This repo contains a PyTorch implementation of the Deep Reinforcement Learning algorithm Twin Delayed Deep Deterministic Policy Gradient (TD3), as described in the paper [Addressing Function Approximation Error in Actor-Critic Methods](https://arxiv.org/pdf/1802.09477.pdf) (2018)
 
-You can see below a few learning curves along with gifs of TD3 agents (trained with this code) play the Inverted Double Pendulum and Inverted Pendulum Swing environments of PyBullet.
+You can see below a few learning curves along with gifs of TD3 agents (trained with this code) play the Bipedal Walker and Inverted Pendulum Swing environments of Gym and PyBullet.
 
 <img src="assets/SAC_InvertedDoublePendulumBulletEnv-v0__gamma_0.99__alpha_0.0003__beta_0.0003__fc1_256__fc2_256__bs_256__buffer_100000__update_period_2__tau_0.005__.png" width="" height="240"> ![](assets/TrainedInvertedDoublePendulumAgentGif.gif)
 
@@ -90,7 +90,7 @@ python3 main.py
 python3 main.py -memory_size 10000 -batch_size 32 -warmup 300 -n_games 400 -env_name InvertedDoublePendulumBulletEnv-v0
 ``` 
 
-- Training a TD3 agent from checkpoint for 100 games
+- Training a TD3 agent from a checkpoint for 100 games
 
 ```text
 python3 main.py -n_games 400 -load_checkpoint True
@@ -102,7 +102,7 @@ python3 main.py -n_games 400 -load_checkpoint True
 python3 main.py -n_games 1 -play True -env_name InvertedPendulumBulletEnv-v0
 ```
 
-- Playing 5 games of *InvertedDoublePendulumBulletEnv-v0* with a trained agent and save the video
+- Playing 5 games of *InvertedDoublePendulumBulletEnv-v0* with a trained agent and save the videos
 
 ```text
 python3 main.py -n_games 5 -monitor True -play True -load_checkpoint True -env_name InvertedDoublePendulumBulletEnv-v0
@@ -110,10 +110,10 @@ python3 main.py -n_games 5 -monitor True -play True -load_checkpoint True -env_n
 
 ### Notes
 1. In order to load a saved checkpoint, the networks should be in the `tmp\name_of_env` directory, with the next names: Actor, Critic_1, Critic_2, Target_Actor. Target_Critic_1 and Target_Critic_1.
-2. For some reason the PyBullet environmets do not work when called with PyBullet instead of Bullet (i.e. use `InvertedDoublePendulumBulletEnv-v0` and not `InvertedDoublePendulumPyBulletEnv-v0`).
+2. For some reason the PyBullet environmets do not work when called with PyBullet, instead call with Bullet (i.e. use `InvertedDoublePendulumBulletEnv-v0` and not `InvertedDoublePendulumPyBulletEnv-v0`).
 3. The current networks for the environments in the `tmp` folder belong to trained agents. You can play with them by running the next code in the command line 
 ```text
-python3 main.py -n_games 5 -play True -load_checkpoint True -gpu_to_cpy True -env_name InvertedDoublePendulumBulletEnv-v0
+python3 main.py -n_games 5 -play True -load_checkpoint True -gpu_to_cpy True -env_name BipedalWalker-v3
 ```
 
 ```text
