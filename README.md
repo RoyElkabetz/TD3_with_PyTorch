@@ -4,7 +4,7 @@ This repo contains a PyTorch implementation of the Deep Reinforcement Learning a
 
 You can see below a few learning curves along with gifs of TD3 agents (trained with this code) play the Bipedal Walker and Inverted Pendulum Swing environments of Gym and PyBullet.
 
-<img src="assets/TD3_HalfCheetahBulletEnv-v0__gamma_0.99__alpha_0.001__beta_0.001__fc1_400__fc2_300__bs_100__buffer_1000000__update_period_2__tau_0.005__noise_std_0.05__warmup_1000__noise_clip_0.5__.png" width="" height="240"> <img src="assets/TD3_BipedalWalker-v3.gif" width="" height="240">
+<img src="assets/TD3_BipedalWalker-v3__gamma_0.99__alpha_0.001__beta_0.001__fc1_400__fc2_300__bs_100__buffer_1000000__update_period_2__tau_0.005__noise_std_0.2__warmup_1000__noise_clip_0.5__.png" width="" height="240"> <img src="assets/TD3_BipedalWalker-v3.gif" width="" height="240">
 
 
 <img src="assets/TD3_InvertedPendulumSwingupBulletEnv-v0__gamma_0.99__alpha_0.001__beta_0.001__fc1_400__fc2_300__bs_100__buffer_1000000__update_period_2__tau_0.005__noise_std_0.2__warmup_1000__noise_clip_0.5__.png" width="" height="240"> <img src="assets/TD3_InvertedPendulumSwingupBulletEnv-v0.gif" width="" height="240">
