@@ -2,15 +2,15 @@
 
 This repo contains a PyTorch implementation of the Deep Reinforcement Learning algorithm Twin Delayed Deep Deterministic Policy Gradient (TD3), as described in the paper [Addressing Function Approximation Error in Actor-Critic Methods](https://arxiv.org/pdf/1802.09477.pdf) (2018)
 
-You can see below a few learning curves along with gifs of TD3 agents (trained with this code) play the Bipedal Walker and Inverted Pendulum Swing environments of Gym and PyBullet.
+You can see below a few learning curves along with gifs of TD3 agents (trained with this code) play the Bipedal Walker, Inverted Pendulum Swingup and Lunar Lander environments of Gym and PyBullet.
 
 <img src="assets/TD3_BipedalWalker-v3__gamma_0.99__alpha_0.001__beta_0.001__fc1_400__fc2_300__bs_100__buffer_1000000__update_period_2__tau_0.005__noise_std_0.2__warmup_1000__noise_clip_0.5__.png" width="" height="240"> <img src="assets/TD3_BipedalWalker-v3.gif" width="" height="240">
 
 
 <img src="assets/TD3_InvertedPendulumSwingupBulletEnv-v0__gamma_0.99__alpha_0.001__beta_0.001__fc1_400__fc2_300__bs_100__buffer_1000000__update_period_2__tau_0.005__noise_std_0.2__warmup_1000__noise_clip_0.5__.png" width="" height="240"> <img src="assets/TD3_InvertedPendulumSwingupBulletEnv-v0.gif" width="" height="240">
 
+<img src="assets/TD3_LunarLanderContinuous-v2__gamma_0.99__alpha_0.001__beta_0.001__fc1_400__fc2_300__bs_100__buffer_1000000__update_period_2__tau_0.005__noise_std_0.1__warmup_1000__noise_clip_0.5__.png" width="" height="240"> <img src="assets/TD3_LunarLanderContinuous-v2.gif" width="" height="240">
 
-For some reason I coudn't make the agent to get a perefect score on the Pendulum Swingup environment, probably because of the funny jiggling you see in the gif. 
 
 
 ## Requirements
